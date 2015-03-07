@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Chat</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Chat</title>
 </head>
 
-<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script src="js/scripts.js"></script>
 
-<body>
+<body onLoad="run();">
 
-<section>
+<section class="chat">
 
 <div class="right-panel">
 
-	Добро пожаловать,Гость.
+		Добро пожаловать, <span class="nickname">Гость</span>.
+    
 	<form style="margin-top:5px">
-		<input type="text"><br>
-		<input class="button17" type="button" value="Сменить имя" style="margin-top:5px;">
+		<input id="name-input" type="text" placeholder="Введите имя"><br>
+		<input class="button17 change-name" type="button" value="Сменить имя" style="margin-top:5px;">
 	</form>
     
     <div class="status-message">
@@ -26,20 +28,22 @@
 
 <div class="chating">
 	<div class="history">
-		<ul style="list-style-type:none">
-			<li>
-            	Здесь будут выводиться сообщения<br>
+		<ul id="msgHis" style="list-style-type:none">
+            <!--<li>            
 				<input class="button15" type="button" value="Редактировать">
 				<input class="button15" type="button" value="Удалить">
-			</li>
+            	<div>Здесь будут выводиться сообщения</div>
+			</li>-->
 		</ul>
+        <div>
+        </div>
 	</div>
     
 	<div class="chat-input">
 		<form>
-			<input class="button17" type="button" value="Отправить">
+			<input class="button17 send-msg" type="button" value="Отправить">
             <div class="message">
-				<input type="text">
+				<input type="text" class="msg-input" placeholder="Введите сообщение">
             </div>
 		</form>
 	</div>

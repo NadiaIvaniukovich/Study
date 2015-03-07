@@ -48,17 +48,24 @@ section{
 }
 
 .history{
+	position:absolute;
 	top:10px;
 	bottom:66px;
-	overflow-y:scroll;
+	
 	}
 .history ul{
 	padding:0;
 	position:absolute;
 	bottom:0;
-	left:20px;
-	right:15px;
+	left:0;
+	right:0;
+	overflow-y:auto;
+	max-height:100%;
+	margin:0;
 }
+.history ul li{
+	padding:10px;
+	}
 .chat-input{
 	bottom:10px;
 	height:30px;
