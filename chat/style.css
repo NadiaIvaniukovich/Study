@@ -86,7 +86,9 @@ li{
 	margin-top:5px;
 	padding:5px;
 }
-
+.edit-text{
+	color:#666666;
+}
 .button15 {
   display: inline-block;
   font-family: arial,sans-serif;
