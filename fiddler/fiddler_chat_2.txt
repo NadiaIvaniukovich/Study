@@ -1,0 +1,10 @@
+GET http://192.168.11.1:999/chat?token=TN27EN HTTP/1.1
+Host: 192.168.11.1:999
+User-agent: Composer
+
+
+HTTP/1.1 200 OK
+Content-length: 37
+Date: Sat, 21 Mar 2015 12:04:44 GMT
+
+{"token":"TN19EN","messages":["Wow"]}

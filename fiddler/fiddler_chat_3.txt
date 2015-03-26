@@ -1,0 +1,14 @@
+POST http://192.168.11.1:999/chat HTTP/1.1
+Host: 192.168.11.1:999
+User-agent: Composer
+Content-Length: 24
+
+{"message" : "Oooo"}
+
+
+HTTP/1.1 200 OK
+Transfer-encoding: chunked
+Date: Sat, 21 Mar 2015 12:07:21 GMT
+
+0
+

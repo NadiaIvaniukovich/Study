@@ -1,0 +1,12 @@
+GET http://192.168.11.1:8888/chat?token=TN11EN HTTP/1.1
+User-Agent: Java/1.7.0_51
+Host: 192.168.11.1:8888
+Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+Connection: keep-alive
+
+
+HTTP/1.1 200 OK
+Content-length: 66
+Date: Sat, 21 Mar 2015 12:01:54 GMT
+
+{"token":"TN35EN","messages":["Hello world!","I'm in chat","Wow"]}
