@@ -55,20 +55,30 @@ public class Server implements HttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         String response = "";
 
-        log.debug("request begin");
-        if ("GET".equals(httpExchange.getRequestMethod())) {
-            response = doGet(httpExchange);
-        } else if ("POST".equals(httpExchange.getRequestMethod())) {
-            doPost(httpExchange);
-        }else if ("DELETE".equals(httpExchange.getRequestMethod())) {
-            doDelete(httpExchange);
-        }else if ("PUT".equals(httpExchange.getRequestMethod())) {
-            doPut(httpExchange);
-        } else {
-            response = "Unsupported http method: " + httpExchange.getRequestMethod();
+        try {
+            log.debug("request begin");
+            if ("GET".equals(httpExchange.getRequestMethod())) {
+                response = doGet(httpExchange);
+            } else if ("POST".equals(httpExchange.getRequestMethod())) {
+                doPost(httpExchange);
+            } else if ("DELETE".equals(httpExchange.getRequestMethod())) {
+                doDelete(httpExchange);
+            } else if ("PUT".equals(httpExchange.getRequestMethod())) {
+                doPut(httpExchange);
+            } else if ("OPTIONS".equals(httpExchange.getRequestMethod())) {
+                response = "";
+            } else {
+                response = "Unsupported http method: " + httpExchange.getRequestMethod();
+            }
+
+            log.debug("response: history size=" + history.size());
+            sendResponse(httpExchange, response);
+        } catch (Exception e) {
+            log.debug("response: error=" + e.getMessage(), e);
+            response = e.getMessage();
+            sendResponse(httpExchange, response, 500);
         }
-        log.debug("response: history size=" + history.size());
-        sendResponse(httpExchange, response);
+
         log.debug("request end\n");
     }
 
@@ -81,7 +91,7 @@ public class Server implements HttpHandler {
             if (token != null && !"".equals(token)) {
                 int index = messageExchange.getIndex(token);
                 log.debug("request parameters: token=" + token);
-                return messageExchange.getServerResponse(history.subList(index, history.size()));
+                return messageExchange.getServerResponse(history,index);
             } else {
                 return "Token query parameter is absent in url: " + query;
             }
@@ -104,9 +114,9 @@ public class Server implements HttpHandler {
 
     private void doDelete(HttpExchange httpExchange) {
         try {
-            Integer messageId = messageExchange.getMessageId(httpExchange.getRequestBody());
+            Long messageId = messageExchange.getMessageId(httpExchange.getRequestBody());
             for (int i=0; i<history.size(); i++) {
-                if(history.get(i).getId() == messageId){
+                if(history.get(i).getId().equals(messageId)){
                     history.remove(i);
                     System.out.println("Message " + messageId + " deleted.");
                     return;
@@ -121,7 +131,7 @@ public class Server implements HttpHandler {
         try {
             Message message = messageExchange.getChangeMessage(httpExchange.getRequestBody());
             for (int i=0; i<history.size(); i++) {
-                if(history.get(i).getId() == message.getId()){
+                if(history.get(i).getId().equals(message.getId())){
                     history.get(i).setText(message.getText());
                     System.out.println("Message " + message.getId() + " changed to " + message.getText());
                     return;
@@ -133,11 +143,18 @@ public class Server implements HttpHandler {
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) {
+        sendResponse(httpExchange, response, 200);
+    }
+
+    private void sendResponse(HttpExchange httpExchange, String response, int code) {
         try {
             byte[] bytes = response.getBytes();
             Headers headers = httpExchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin","*");
-            httpExchange.sendResponseHeaders(200, bytes.length);
+            if("OPTIONS".equals(httpExchange.getRequestMethod())) {
+                headers.add("Access-Control-Allow-Methods","PUT, DELETE, POST, GET, OPTIONS");
+            }
+            httpExchange.sendResponseHeaders(code, bytes.length);
             OutputStream os = httpExchange.getResponseBody();
             os.write( bytes);
             os.flush();
